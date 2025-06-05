@@ -31,8 +31,8 @@ USER scientist
 
 # This environment variable can be changed at build time:
 #   docker build  --build-arg BOKEH_PREFIX=/abc
-ARG BOKEH_PREFIX="abc"
-ENV BOKEH_PREFIX $BOKEH_PREFIX
+ARG BOKEH_PREFIX=""
+ENV BOKEH_PREFIX=$BOKEH_PREFIX
 
 # start bokeh server
 EXPOSE 5006
