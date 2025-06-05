@@ -11,7 +11,7 @@ cd ..
 rm -r jmol-14.29.22
 
 # Extract data
-tar xf data.tar.xz && rm data.tar.xz
+tar xf data.tar.xz
 
 #cd ..
 

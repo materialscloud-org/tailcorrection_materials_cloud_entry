@@ -1,3 +1,6 @@
+# NOTE: There is some extra preparation needed before building this image,
+# e.g. data download & preparation. See README.
+
 # using https://github.com/materialscloud-org/mc-docker-stack/tree/discover
 #
 FROM aiidalab/aiidalab-docker-stack:discover
@@ -8,8 +11,12 @@ WORKDIR /project
 RUN wget https://sourceforge.net/projects/jmol/files/Jmol/Version%2014.29/Jmol%2014.29.22/Jmol-14.29.22-binary.zip/download --output-document jmol.zip
 RUN unzip jmol.zip && cd jmol-14.29.22 && unzip jsmol.zip
 
-# Install nodejs for jsmol-bokeh-extension
-RUN apt-get update && apt-get install -y --no-install-recommends nodejs
+# Fix broken PostgreSQL repo and install compatible Node.js (v16 for Bionic)
+RUN rm -f /etc/apt/sources.list.d/pgdg.list && \
+    apt-get update && \
+    curl -fsSL https://deb.nodesource.com/setup_16.x | bash - && \
+    apt-get install -y --no-install-recommends nodejs && \
+    apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # Copy bokeh app
 WORKDIR /project/discover-tc-applicability
@@ -21,14 +28,17 @@ COPY setup.py import_db.py ./
 RUN pip install -e .
 COPY serve-app.sh /opt/
 
+# Copy the data directly to into the image:
+COPY data ./data
+
 RUN chown -R scientist:scientist /project
 
 USER scientist
 
 # This environment variable can be changed at build time:
 #   docker build  --build-arg BOKEH_PREFIX=/abc
-ARG BOKEH_PREFIX="abc"
-ENV BOKEH_PREFIX $BOKEH_PREFIX
+ARG BOKEH_PREFIX=""
+ENV BOKEH_PREFIX=$BOKEH_PREFIX
 
 # start bokeh server
 EXPOSE 5006

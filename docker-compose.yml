@@ -3,17 +3,12 @@ version: '2'
 services:
   bokeh:
     restart: always
-    build:
-      context: .
-      args:
-        BOKEH_PREFIX: /tc-applicability
-    image: discover-tc-applicability:master
-    command: ["/opt/serve-app.sh"]
-    environment:
-      PYTHONPATH: '/project'
-      SHELL: '/bin/bash'
+    build: .
+    image: discover-tc-applicability:latest
 
-    volumes:
-     - './data:/project/discover-tc-applicability/data'
+    # Data is copied into the image at build time, so the following is not needed.
+    # volumes:
+    #  - './data:/project/discover-tc-applicability/data'
+
     ports:
       - '3251:5006'
