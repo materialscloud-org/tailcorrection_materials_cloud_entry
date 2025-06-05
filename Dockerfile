@@ -11,7 +11,6 @@ RUN unzip jmol.zip && cd jmol-14.29.22 && unzip jsmol.zip
 # Fix broken PostgreSQL repo and install compatible Node.js (v16 for Bionic)
 RUN rm -f /etc/apt/sources.list.d/pgdg.list && \
     apt-get update && \
-    apt-get install -y curl gnupg && \
     curl -fsSL https://deb.nodesource.com/setup_16.x | bash - && \
     apt-get install -y --no-install-recommends nodejs && \
     apt-get clean && rm -rf /var/lib/apt/lists/*
