@@ -1,3 +1,6 @@
+# NOTE: There is some extra preparation needed before building this image,
+# e.g. data download & preparation. See README.
+
 # using https://github.com/materialscloud-org/mc-docker-stack/tree/discover
 #
 FROM aiidalab/aiidalab-docker-stack:discover
@@ -24,6 +27,9 @@ RUN ln -s /project/jmol-14.29.22/jsmol ./detail/static/jsmol
 COPY setup.py import_db.py ./
 RUN pip install -e .
 COPY serve-app.sh /opt/
+
+# Copy the data directly to into the image:
+COPY data ./data
 
 RUN chown -R scientist:scientist /project
 
